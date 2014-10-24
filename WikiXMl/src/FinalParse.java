@@ -1,4 +1,8 @@
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -6,16 +10,61 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.Version;
+
 import edu.jhu.nlp.wikipedia.PageCallbackHandler;
 import edu.jhu.nlp.wikipedia.WikiXMLParser;
 import edu.jhu.nlp.wikipedia.WikiXMLParserFactory;
 
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.Version;
 
 public class FinalParse {
 	 static Map<String, ArrayList<String>> hashMap = new HashMap<String,  ArrayList<String>>(); 
+	 static Map<String, String> hashMap_abstract = new HashMap<String,  String>();
 	 static ArrayList<String> findme = new ArrayList<String>();
 	 static ArrayList<String> findme2 = new ArrayList<String>();
 	 String WHERE = "";
+	
+	/*
+	 * In this class, we took final parse
+	 * We make unique hashmap for the files:
+	 * first.xml - link1,link2,link3
+	 * second.xml - link4,link5,link6
+	 * So we have links with the right files in hashMap .. 
+	 * Next we iterate in hashmap ... 
+	 * We get first.xml and iterate in links 
+	 * With these links we have reade compare list for first.xml 
+	 * Next we run wikipediaHandler_parse and compare with list 
+	 * We get second.xml ... and the same steps .. 
+	 * 
+	 * 
+	 */
+	 
+	 
+	 
+	 
 	 private static void addValues(String key, String value)  
 	 {   
 	  ArrayList<String> tempList = null;        
@@ -35,7 +84,14 @@ public class FinalParse {
 	
 	public void finalize_parse(List<String[]> myList)
 	{
-		PageCallbackHandler handler = new DemoSAXHandler_parse();
+		
+		
+		
+		String userdir = System.getProperty("user.dir"); 	
+		
+		
+		
+		PageCallbackHandler handler = new WikipediaHandler_parse();
 		System.out.println(myList.size()+" Final parse - unique key - duplicate");
 		for(int i = 0;i<myList.size();i++){
 			
@@ -45,15 +101,20 @@ public class FinalParse {
 			
 			
 			String parent = help[0];
-			String subor = help[1];
-			String hladanynazov = help[2];
+			String nameFile = help[1];
+			String searchName = help[2];
 			
-			addValues(subor,hladanynazov+"|"+parent);
+			addValues(nameFile,searchName+"|"+parent);
 			
 			
 		}
 		
-		System.out.println("Iterate in hashmap and search for pages");
+		
+	
+	
+		
+		
+		System.out.println("Iterate in hashmap and search for pages ...");
 		 Iterator<String> it = hashMap.keySet().iterator();   
 		  ArrayList<String> tempList = null;  
 		  
@@ -83,7 +144,7 @@ public class FinalParse {
 		            
 		            
 		            String cesta = key;
-		            System.out.println("Parsujeme finalne | cesta:"+cesta);
+		            System.out.println("PARSING FINAL ... PLEASE WAIT | cesta:"+cesta);
 	                if(new File(cesta).exists()){
 	                WikiXMLParser wxsp = WikiXMLParserFactory.getSAXParser(cesta);
 	                

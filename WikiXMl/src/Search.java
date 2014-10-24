@@ -14,82 +14,82 @@ import java.util.regex.Pattern;
 import edu.jhu.nlp.wikipedia.PageCallbackHandler;
 
 
-public class Search extends SAXParserDemo {
+public class Search extends WikipediaParse {
+	
+	
+	/*
+	 * Search class and generate method 
+	 * 1. Load index(index create with first wikiparse) of every wikipage to the hashmap 
+	 * 2. Work with links, which we find by first parse 
+	 * 	  - every page has many links, so links are in list and we iterate  
+	 * 3. In for cycle, we look into the hashmap and compare, if link is in the hashmap, we store file location and link
+	 *    - hashmap is the fastest way in this case
+	 * 4. Start final parse with list of file location and link
+	 * 
+	 */
 	
 	
 	static Map<String, String> hashMap2 = new HashMap<String,  String>(); 
+	
 	public void generate() throws IOException{
 	
 		List<String[]> myList = new ArrayList<String[]>();
-		
-		 File path = new File("D:/Trash/WikiParse");
+		 String userdir = System.getProperty("user.dir"); 	
+		 File path = new File(userdir+"/WikiParse");
          
          File [] files = path.listFiles();
+         System.out.println("Save index to the HashMap ... Please wait ... ");
          for (int i = 0; i < files.length; i++){
              if (files[i].isFile()){ 
                  
-                 spracovanysubor = files[i].toString();
-                 String cesta= files[i].toString();
-                 final BufferedReader reader = new BufferedReader(new FileReader(cesta));
+                 WorkingFile = files[i].toString();
+                 System.out.println("FILE INDEX OF WIKIPAGES: "+WorkingFile);
+                 String directory_w= files[i].toString();
+                 final BufferedReader reader = new BufferedReader(new FileReader(directory_w));
                  final StringBuilder contents = new StringBuilder();
                  while(reader.ready()) {
-                     contents.append(reader.readLine());
-                     if(reader.readLine().contains("T:")){
-                     String[] cely = reader.readLine().toString().split("\\|");
+                    // contents.append(reader.readLine());
+                	 
+                	 String read_string = reader.readLine().toString();
+                	// System.out.println(precitane);
+                     if(read_string.contains("T:")){
+                     String[] all_string = read_string.split("\\|");
                     
-                     hashMap2.put(cely[0], cely[2]);}
+                     hashMap2.put(all_string[0], all_string[2]);}
                     
                      
                  }
                  reader.close();
-                 final String stringContents = contents.toString();
-            //  System.exit(0);
-                //tu mame obsah suboru indexu ... 
+          
                  
-                 System.out.println("Process list of links of every page"+" | PAGES Count:"+listOfLinks.size());
+                 System.out.println("WORK WITH LINKS OF EVERY PAGES "+" | PAGES Count:"+listOfLinks.size());
                  for(int z=0;z<listOfLinks.size();z++){
                 	 
                 	
                 	 
-             	String linky = listOfLinks.get(z);
-             	linky.replaceAll("\\[", "");
-             	linky.replaceAll("\\]", "");
-             	//System.out.println(linky);
-             	String[] polelinkov = linky.split(",");
-             	//System.out.println(linky);
-             	for(int k = 0;k<polelinkov.length;k++){
-             		String jedenlink = polelinkov[k].trim();
+             	String getLinks = listOfLinks.get(z);
+             	getLinks.replaceAll("\\[", "");
+             	getLinks.replaceAll("\\]", "");
+             	
+             	String[] arrayOfLinks = getLinks.split(",");
+           
+             	for(int k = 0;k<arrayOfLinks.length;k++){
+             		String oneLink = arrayOfLinks[k].trim();
              		
-             		if(hashMap2.containsKey("T:"+jedenlink)){
+             		if(hashMap2.containsKey("T:"+oneLink)){
              			
              		
                  		
-                 		String hladanysubor = hashMap2.get("T:"+jedenlink);
+                 		String searchFile = hashMap2.get("T:"+oneLink);
                		  String[] array = new String[3];
                		  array[0]=listOfTitles.get(z);
-               		 array[1]=hladanysubor;
-               		 array[2]=jedenlink;
+               		 array[1]=searchFile;
+               		 array[2]=oneLink;
                		 	myList.add(array);
              			
              		}
              	
-             		/*
-             		String pattern1 = "T:"+jedenlink+"|";
-                    String pattern2 = "|>"; 
-                    Pattern p = Pattern.compile(Pattern.quote(pattern1) + "(.*?)" + Pattern.quote(pattern2));
-                 	//Pattern p = Pattern.compile("ab", Pattern.CASE_INSENSITIVE);
-            		Matcher matcher = p.matcher(stringContents);
-            		while(matcher.find())
-            		{
-            			   String[] pomoc = matcher.group().toString().split("\\|");
-                 		  String hladanysubor = pomoc[pomoc.length-2];
-                 		  String[] array = new String[3];
-                 		  array[0]=listOfTitles.get(z);
-                 		 array[1]=hladanysubor;
-                 		 array[2]=jedenlink;
-                 		 	myList.add(array);
-
-                 		            		}*/
+             	
              		
             		
              		 
@@ -103,7 +103,7 @@ public class Search extends SAXParserDemo {
              	
              			
  				} 
-                 System.out.println("Final parse");
+                 System.out.println("FINAL PARSE START ... ");
                  FinalParse fp = new FinalParse();
          		 fp.finalize_parse(myList);
                  
