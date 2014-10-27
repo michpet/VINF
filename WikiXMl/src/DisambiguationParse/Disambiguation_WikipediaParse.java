@@ -15,12 +15,16 @@ public class Disambiguation_WikipediaParse {
          * @author Michal Petras
          * 2014 FIIT - Vyhladavanie informacii
          */
+	
+	/* dorobit vysledky do wikipage a navod na junit testy*/
+	
 	/* Main class
 	 * Use - parse abstract xml OR call wikipedia files parser
 	 * If variable IndexFunction is true - indexing of page will be working, if false, skip this step
 	 * If variable ParseAbstractFunction is true - class ParseAbstract will parse abstract.xml and create abstract index
 	 *
-	 * We could parse in small steps - for example 2gb files, but we need full abstract index (create from 4gb xml file - 10-15 minutes)
+	 * We could parse in small steps - for example 2gb files, but we need full abstract index (create from 4gb xml file - 10-15 minutes),
+	 * but if we have every file, this parse every pages (small files = could missing pages)
 	 *
 	 *
 	 * USE STEPS FOR NEW USER:
@@ -59,7 +63,7 @@ public class Disambiguation_WikipediaParse {
 	static String WorkingFile = "";
 	static boolean IndexFunction = false; // if true - indexing , if false - skip indexing - we must have index
 	static boolean ParseAbstract_function = false; // if true - parse and create abstract index, if false - skip - we must have index
-	static boolean StartService = false; //if true, parser wont work, serach service will turn on
+	static boolean StartService = true; //if true, parser wont work, serach service will turn on
 	static boolean Help = false; //if true, parser wont work, serach service will turn on
 	
 	static String userdir = System.getProperty("user.dir");
@@ -106,7 +110,7 @@ public class Disambiguation_WikipediaParse {
                 	try {
 						pa.parse();
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
+					
 						e.printStackTrace();
 					}
                 	
